@@ -166,7 +166,6 @@ public class Board extends Observable implements ActionListener{
 	 * 
 	 * @param newX - The new potential startlocation for the x-coordinate, to check right
 	 * it should be currentX + 1, and for left currentX - 1
-	 * @param coords - The shape of the tetrominoe
 	 * @return True if there is in fact a collision, false otherwise
 	 */
 	private boolean checkCollisionsSide(int newX) {
@@ -184,7 +183,6 @@ public class Board extends Observable implements ActionListener{
 	/* Move the active tetrominoe one step to the right*/
 	public void stepRight(){
 		if(currentX < (10-coords[0].length)){
-			//searchEmptyCol(new String("RIGHT"));
 			if(!checkCollisionsSide(currentX+1)){
 				currentX++;
 				gridUpdateActive();	
