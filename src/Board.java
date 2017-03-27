@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 
-/** Board class to represent the tetrisboard. All the board logic happpens here 
+/** Board class to represent the tetris board. All the board logic happpens here 
  * 
- * last updataed: 2017-02-28
+ * last updated: 2017-03-27
  * 
- * @author Martin
+ * @author Martin Bergström
  *
  */
 public class Board extends Observable implements ActionListener{
@@ -26,16 +26,13 @@ public class Board extends Observable implements ActionListener{
 	private int currentY = 0;
 	private int[][] coords;
 	private boolean rotatable;
-	private int clearedRows; //our score
+	private int clearedRows; 
 	private Tshape activeTetro;
 	private Tshape nextTetro;
-	//private ArrayList<Tshape> staticTetros; //spara alla tetros med dess färg?
-	//private boolean[][] grid; //innehåller static tetros true om platsen upptas, ev modda så det innehåller både boolean och färg?
 	private GridTile[][] grid;
 	private boolean paused;
 	private boolean tShapeActive;
 	private boolean gameOver;
-
 
 
 	public Board(){
@@ -44,24 +41,22 @@ public class Board extends Observable implements ActionListener{
 		clearedRows = 0;
 		gameOver = false;
 
-		//staticTetros = new ArrayList<Tshape>();
 		grid = new GridTile[hBOARD][wBOARD];
 		for(int i = 0; i<hBOARD; i++){
 			for(int j = 0; j<wBOARD; j++){
 				grid[i][j] = new GridTile();
-				grid[i][j].setFalse();
-				//grid[i][j].setColorGridTile(Color.GRAY));
+				grid[i][j].setFalse();			
 			}
 		}
-		timer = new Timer(timerInterval,this); // hur fungerar denna? delaya movement på ticks?
-		timer.start(); // starta timern direkt
+		timer = new Timer(timerInterval,this); 
+		timer.start(); 
 		activeTetro = new Tshape();
 		activeTetro.randomize(); 
 		nextTetro = new Tshape();
 		nextTetro.randomize();
 	}
 
-	//uppdatera spelet ett steg/uppdatarea g2d?
+	
 	public void gameStep(){
 		if(!gameOver){
 			if(!tShapeActive){
@@ -128,9 +123,8 @@ public class Board extends Observable implements ActionListener{
 				rotatable = false;
 				setActiveStatic();
 			}
-		}else{//om når botten, currentY = 21?
+		}else{
 			currentY++;
-			//staticTetros.add(activeTetro); // gör denna något
 			setActiveStatic();
 			rotatable = false;
 		}
@@ -139,14 +133,11 @@ public class Board extends Observable implements ActionListener{
 
 
 	private void setActiveStatic(){
-		// här skall den aktiva tetron kopiera över sina coords till griddens booleans.
-		//coords = activeTetro.getCoords();
 		for(int i = 0; i<coords.length; i++){
 			for(int j = 0; j<coords[i].length; j++){
 				if(coords[i][j] == 1){
 					grid[(currentY-coords.length)+i][currentX+j].setTrue();
 					grid[(currentY-coords.length)+i][currentX+j].setColorGridTile(activeTetro.getColor());
-					//System.out.println( ((currentY-coords.length)+i) + " , " + (currentX+j) + "is now true");
 				}
 			}
 		}
@@ -355,5 +346,4 @@ public class Board extends Observable implements ActionListener{
 	public void deActivateFastDrop() {
 		timer.setDelay(timerInterval);
 	}
-
 }
