@@ -2,18 +2,26 @@ import java.awt.Color;
 import java.util.Random;
 
 
+/**
+ * Class to generate tetrominoes and also rotate them.
+ * 
+ * The rotation is based on linear algebra where you can accomplish a rotation by trasposing the matrix 
+ * and then reverse either the rows to rotate right or the columns to rotate left
+ * 
+ * @author Martin Bergström
+ *
+ */
 public class Tshape {
 	private Tetrominoes tetro;
 	private int[][] shapeCoords;
 
-
-	//choose a random tetro and assign local variable
 	public void randomize(){
 		tetro= Tetrominoes.values()[new Random().nextInt(Tetrominoes.values().length)];
 
 		shapeCoords=tetro.getcoords();
 	}
 
+	
 	public static int[][] trasposeMatrix(int[][] matrix)
 	{
 	    int m = matrix.length;
@@ -56,7 +64,6 @@ public class Tshape {
     }
 }
 	public static void reverseRowsInPlace(int[][] matrix){
-
 	    for(int row = 0; row < matrix.length; row++){
 	        for(int col = 0; col < matrix[row].length / 2; col++) {
 	            int temp = matrix[row][col];
@@ -76,16 +83,5 @@ public class Tshape {
 	
 	public String toString(){
 		return tetro.name();
-	}
-
-	//	//ska returna radlängd
-	//	public int getWidth(){
-	//		System.out.println("Radlängden är " + (tetro.figures.length-1));
-	//		return (tetro.f.length-1);
-	//	}
-	//	
-	//	//ska returnera kolumnlängd
-	//	public int getHeight(){
-	//		return tetro.figures[0].length;
-	//	}
+	}	
 }

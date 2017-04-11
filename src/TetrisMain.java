@@ -20,7 +20,14 @@ import javax.swing.border.EmptyBorder;
 
 import com.sun.xml.internal.ws.transport.http.ResourceLoader;
 
-//this is the view
+
+/**
+ * The main view class to represent the game grid graphically. 
+ * Acts as an observer on the board model
+ * 
+ * @author Martin Bergström
+ *
+ */
 public class TetrisMain implements Observer, KeyListener {
 	private Tile[][] gameGrid;
 	private Tile[][] nextPieceGrid; 
@@ -89,7 +96,7 @@ public class TetrisMain implements Observer, KeyListener {
 		frame.getContentPane().add(scorePanel, BorderLayout.EAST);
 		frame.getContentPane().add(gamePanel, BorderLayout.CENTER);
 
-		//Varje del av spelplanen är en panel som ska kunna målas beroende på vilket tetriomione
+		
 		gameGrid = new Tile[22][10];
 		for(int i = 0; i<22; i++){
 			for(int j = 0; j<10; j++){
@@ -106,6 +113,12 @@ public class TetrisMain implements Observer, KeyListener {
 	}
 
 	
+	/* 
+	 * Updates the GUI depending on what kind of string sent from the model
+	 * 
+	 * This is to avoid having to repaint the entire grid when active is falling and so on
+	 * 
+	 */
 	@Override
 	public void update(Observable obs, Object obj) {
 		if(obj instanceof Boolean == true){		
@@ -140,6 +153,9 @@ public class TetrisMain implements Observer, KeyListener {
 		frame.repaint();
 	}
 
+	/**
+	 * Removes the old painting of the active tetrominoe
+	 */
 	public void removeOldActive(){
 		for(int i = 0; i<oldCoordinatesActive.size(); i++){
 			int y =oldCoordinatesActive.get(i).x;
@@ -149,6 +165,9 @@ public class TetrisMain implements Observer, KeyListener {
 		oldCoordinatesActive.clear();
 	}
 
+	/**
+	 * Paints the new piece generated from the model
+	 */
 	public void paintNewNextPiece(){
 		for(int i = 0; i<nextPieceGrid.length; i++){
 			for(int j = 0; j<nextPieceGrid[0].length; j++){
@@ -170,6 +189,9 @@ public class TetrisMain implements Observer, KeyListener {
 		this.board=board;
 	}
 
+	/**
+	 * Repaints the whole static grid
+	 */
 	public void rePaintStatic(){
 		GridTile[][] grid = board.getGrid();
 
@@ -184,6 +206,9 @@ public class TetrisMain implements Observer, KeyListener {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keycode = e.getKeyCode();
