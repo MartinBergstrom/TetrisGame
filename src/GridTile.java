@@ -1,7 +1,11 @@
 import java.awt.Color;
 
-/* Can I change this class to a more OO-approach?
+
+/**
+ * Class to help represent a gridTile better with boolean and color.
  * 
+ * @author Martin Bergström
+ *
  */
 public class GridTile {
 	private boolean bool;

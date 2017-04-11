@@ -105,10 +105,7 @@ public class TetrisMain implements Observer, KeyListener {
 		frame.setVisible(true);
 	}
 
-	/*
-	 * Kan göras snyggare? 
-	 * 
-	 */
+	
 	@Override
 	public void update(Observable obs, Object obj) {
 		if(obj instanceof Boolean == true){		

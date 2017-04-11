@@ -15,10 +15,8 @@ public class Tile extends JPanel{
 		super.paintComponent(g);
 		g.setColor(color);
 		g.fillRect(0,0,100,100);
-		//setPreferredSize(new Dimension(40,40));
 	}
 	
-	//funkar ej varför? eller gör den	
 	public void setShapeColor(Color c){
 		this.color = c;	
 	}
@@ -30,5 +28,4 @@ public class Tile extends JPanel{
 	public Tetrominoes returnTetro(){
 		return tetros;
 	}
-
 }
