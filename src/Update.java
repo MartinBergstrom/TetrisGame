@@ -1,0 +1,4 @@
+
+public enum Update {
+	ACTIVE,STATIC,NEXT,LEVELUP,GAMEOVER
+}

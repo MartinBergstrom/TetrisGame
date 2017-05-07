@@ -34,6 +34,7 @@ public class TetrisMain implements Observer, KeyListener {
 	private JFrame frame;
 	private Board board;
 	private JLabel scoreLabel;
+	private JLabel currentLvl;
 
 	private static final int wBOARD = 10;
 	private static final int hBOARD = 22;
@@ -48,7 +49,7 @@ public class TetrisMain implements Observer, KeyListener {
 
 		//SCOREPANEL
 		JPanel scorePanel = new JPanel(new GridLayout(3,1));
-			//NEXTPIECE
+		//NEXTPIECE
 		JPanel nextPiecePanel = new JPanel(new GridLayout(2,1));
 		JLabel topLabelNextP = new JLabel();
 		JPanel nextPieceGridPanel = new JPanel(new GridLayout(4,3,1,1));
@@ -66,7 +67,7 @@ public class TetrisMain implements Observer, KeyListener {
 
 		nextPiecePanel.add(topLabelNextP);
 		nextPiecePanel.add(nextPieceGridPanel);
-			//MIDPANEL
+		//MIDPANEL
 		JPanel midScorePanel = new JPanel();
 		JLabel nbrLinesLabel = new JLabel();
 		nbrLinesLabel.setText("<html><body>Number of lines cleared:</body></html>");
@@ -74,18 +75,21 @@ public class TetrisMain implements Observer, KeyListener {
 		scoreLabel = new JLabel();
 		midScorePanel.add(nbrLinesLabel);
 		midScorePanel.add(scoreLabel);
-			//BOTPANEL
+		//BOTPANEL
 		JPanel botScorePanel = new JPanel();
 		JLabel levelLabel = new JLabel();
+		currentLvl = new JLabel();
+		currentLvl.setText("1");
 		levelLabel.setPreferredSize(new Dimension(60,200));
 		levelLabel.setText("<html><body>LEVEL</body></html>");
 		botScorePanel.add(levelLabel);
+		botScorePanel.add(currentLvl);
 		//ADD IN SCOREPANEL
 		scorePanel.setBorder(new EmptyBorder(10,10,10,10));
 		scorePanel.add(nextPiecePanel);
 		scorePanel.add(midScorePanel);
 		scorePanel.add(botScorePanel);
-		
+
 		//GAMEPANEL
 		JPanel gamePanel = new JPanel(new GridLayout(22,10,1,1));
 		gamePanel.setFocusable(true);
@@ -96,7 +100,7 @@ public class TetrisMain implements Observer, KeyListener {
 		frame.getContentPane().add(scorePanel, BorderLayout.EAST);
 		frame.getContentPane().add(gamePanel, BorderLayout.CENTER);
 
-		
+
 		gameGrid = new Tile[22][10];
 		for(int i = 0; i<22; i++){
 			for(int j = 0; j<10; j++){
@@ -112,28 +116,29 @@ public class TetrisMain implements Observer, KeyListener {
 		frame.setVisible(true);
 	}
 
-	
+
 	/* 
-	 * Updates the GUI depending on what kind of string sent from the model
+	 * Updates the GUI depending on what kind of Update enum sent from the model
 	 * 
 	 * This is to avoid having to repaint the entire grid when active is falling and so on
 	 * 
 	 */
 	@Override
 	public void update(Observable obs, Object obj) {
-		if(obj instanceof Boolean == true){		
-			JOptionPane.showMessageDialog(frame, "GAME OVER");
-			System.out.println("GAME OVER GAME OVER GAME OVER GAME OVER");		
-		}else if(obj instanceof String){
-			if(obj.equals("NEXT")){
+		if(obj instanceof Update){
+			if(obj.equals(Update.GAMEOVER)){
+				JOptionPane.showMessageDialog(frame, "GAME OVER");
+				System.out.println("GAME OVER GAME OVER GAME OVER GAME OVER");
+			}
+			if(obj.equals(Update.NEXT)){
 				paintNewNextPiece();
 			}
-			if(obj.equals("STATIC")){
+			if(obj.equals(Update.STATIC)){
 				oldCoordinatesActive.clear();
 				rePaintStatic();
 				paintNewNextPiece();
 			}
-			if(obj.equals("ACTIVE")){
+			if(obj.equals(Update.ACTIVE)){
 				removeOldActive(); 
 				int[][] activeCoords = board.getActive();
 				Color activeColor = board.getCurrentTetroColor();
@@ -147,6 +152,9 @@ public class TetrisMain implements Observer, KeyListener {
 						}
 					}
 				}		
+			}
+			if(obj.equals(Update.LEVELUP)){
+				currentLvl.setText(""+board.getCurrentLevel());
 			}
 		}
 		scoreLabel.setText(Integer.toString(board.getClearedRows()));
@@ -174,7 +182,7 @@ public class TetrisMain implements Observer, KeyListener {
 				nextPieceGrid[i][j].setShapeColor(Color.GRAY);
 			}
 		}
-		
+
 		int[][] next = board.getNextPieceCoords();
 		for(int i = 0; i<next.length; i++){
 			for(int j = 0; j<next[0].length; j++){

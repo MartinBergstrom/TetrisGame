@@ -33,6 +33,7 @@ public class Board extends Observable implements ActionListener{
 	private boolean paused;
 	private boolean tShapeActive;
 	private boolean gameOver;
+	private Levels lvls;
 
 	/**
 	 * Creates the Board and initialized the grid
@@ -55,6 +56,7 @@ public class Board extends Observable implements ActionListener{
 		activeTetro.randomize(); 
 		nextTetro = new Tshape();
 		nextTetro.randomize();
+		lvls = new Levels(timer);
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class Board extends Observable implements ActionListener{
 			}
 		}else{ 
 			setChanged();
-			notifyObservers(gameOver);
+			notifyObservers(Update.GAMEOVER);
 			timer.stop();
 		}
 	}
@@ -82,7 +84,7 @@ public class Board extends Observable implements ActionListener{
 		activeTetro = nextTetro;
 		nextTetro = new Tshape();
 		nextTetro.randomize();
-		gridUpdateNextPiece();
+		callUpdate(Update.NEXT);
 		coords = activeTetro.getCoords();
 		currentY = coords.length-1;
 		currentX = 3;
@@ -92,32 +94,14 @@ public class Board extends Observable implements ActionListener{
 			System.out.println("!!GAME OVER!!!");
 			notifyObservers(gameOver);
 		}
-		gridUpdateActive();
+		callUpdate(Update.ACTIVE);
 		tShapeActive = true; 
 	}
 
-	/**
-	 * Tells the observer that a new piece is placed -> update the grid 
-	 */
-	private void gridUpdateNextPiece(){
+	
+	private void callUpdate(Update tag){
 		setChanged();
-		notifyObservers(new String("NEXT"));
-	}
-
-	/**
-	 * Tells the observer to update the static grid
-	 */
-	private void gridUpdateStatic() {
-		setChanged();
-		notifyObservers(new String("STATIC"));
-	}
-
-	/**
-	 * Tells the observer to update the active tetrominoe
-	 */
-	private void gridUpdateActive() {
-		setChanged();
-		notifyObservers(new String("ACTIVE"));
+		notifyObservers(tag);
 	}
 
 	/**
@@ -131,7 +115,7 @@ public class Board extends Observable implements ActionListener{
 			currentY++; 
 			if(!isBlocked){	
 				rotatable = true;
-				gridUpdateActive();
+				callUpdate(Update.ACTIVE);
 			}else{
 				rotatable = false;
 				setActiveStatic();
@@ -158,7 +142,7 @@ public class Board extends Observable implements ActionListener{
 		rotatable = false;
 		activeTetro = null;
 		tShapeActive = false;
-		gridUpdateStatic(); 
+		callUpdate(Update.STATIC); 
 	}
 
 	/**
@@ -205,7 +189,7 @@ public class Board extends Observable implements ActionListener{
 		if(currentX < (10-coords[0].length)){
 			if(!checkCollisionsSide(currentX+1)){
 				currentX++;
-				gridUpdateActive();	
+				callUpdate(Update.ACTIVE);
 			}
 		}
 	}
@@ -218,7 +202,7 @@ public class Board extends Observable implements ActionListener{
 		if(currentX > 0){
 			if(!checkCollisionsSide(currentX-1)){
 				currentX--;
-				gridUpdateActive();	
+				callUpdate(Update.ACTIVE);
 			}
 		}
 	}
@@ -232,10 +216,9 @@ public class Board extends Observable implements ActionListener{
 			outOfBoundsRight();
 			activeTetro.rotateRight();
 			coords = activeTetro.getCoords();
-			gridUpdateActive();
+			callUpdate(Update.ACTIVE);
 		}		
 	}
-
 
 	/**
 	 * Tries to rotate the active tetro one step to the left, 
@@ -246,10 +229,9 @@ public class Board extends Observable implements ActionListener{
 			outOfBoundsRight();
 			activeTetro.rotateLeft();
 			coords = activeTetro.getCoords();	
-			gridUpdateActive();
+			callUpdate(Update.ACTIVE);
 		}
 	}
-
 
 	/**
 	 * Checks if the currentX-coordinate of the active tetro is out of bounds and in that case adjusts it.
@@ -322,7 +304,7 @@ public class Board extends Observable implements ActionListener{
 				}
 			}
 		}
-		gridUpdateStatic();
+		callUpdate(Update.STATIC);
 	}
 
 	/**
@@ -333,9 +315,19 @@ public class Board extends Observable implements ActionListener{
 			if( rowFilled(getRow(i)) ){
 				clearRow(i);
 				clearedRows++;
+				levelUp();
 				shiftDown(i-1); 
 			}
 		}	
+	}
+	
+	public void levelUp(){
+		//levla upp vart 5e cleared row?
+		if(clearedRows%5 == 0){
+			lvls.levelUp();
+			callUpdate(Update.LEVELUP);
+			System.out.println("LEVEL UP");
+		}
 	}
 	
 	@Override
@@ -346,10 +338,10 @@ public class Board extends Observable implements ActionListener{
 	}
 
 	/**
-	 * Actives the fast drop-mode where timer will delay 90ms
+	 * Actives the fast drop-mode where timer will delay 40ms
 	 */
 	public void activateFastDrop() {
-		timer.setDelay(90);
+		timer.setDelay(40);
 	}
 	
 	/**
@@ -360,6 +352,9 @@ public class Board extends Observable implements ActionListener{
 	}
 	
 	// GETTER AND SETTERS ///
+	public int getCurrentLevel(){
+		return lvls.getCurrentLevel();
+	}
 
 	public void pauseGame(){
 		paused = true;

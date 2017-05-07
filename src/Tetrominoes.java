@@ -1,54 +1,13 @@
 import java.awt.Color;
-/*
- * NoShape(new int[][]{
-			{0,0,0}, 
-			{0,0,0}, 
-			{0,0,0}
-	}, new Color(0,0,0)),
-	ZShape(new int[][]{
-			{0,0,0},
-			{1,1,0},
-			{0,1,1}
-	}, new Color(255,0,0)),
-	SShape(new int[][]{
-			{0,0,0},
-			{0,1,1},
-			{1,1,0}
-	}, new Color(0,255,0)),
-	LineShape(new int[][]{
-			{0,0,0,0},
-			{0,0,0,0},
-			{1,1,1,1},
-			{0,0,0,0}
-	}, new Color(0,255,255)),
-	TShape(new int[][]{
-			{0,0,0},
-			{0,1,0},
-			{1,1,1}
-	}, new Color(150,0,255)),
-	SquareShape(new int[][]{
-			{1,1},
-			{1,1}
-	}, new Color(255,255,0)),
-	LShape(new int[][]{
-			{1,0,0},
-			{1,0,0},
-			{1,1,0}
-	}, new Color(0,0,255)),
-	MirroredLShape(new int[][]{
-			{0,0,1},
-			{0,0,1},
-			{0,1,1}
-	}, new Color(255,150,0));
+
+/**
+ * Class to represent a single tetrominoe, 
+ * the matrix represents the shape of the tetro
+ * 
+ * @author Martin Bergström
+ *
  */
-
-
 public enum Tetrominoes {
-//	NoShape(new int[][]{
-//			{0,0,0}, 
-//			{0,0,0}, 
-//			{0,0,0}
-//	}, new Color(0,0,0)),
 	ZShape(new int[][]{
 			{1,1,0},
 			{0,1,1}
